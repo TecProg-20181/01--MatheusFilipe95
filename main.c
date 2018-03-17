@@ -99,6 +99,28 @@ Image cortar_imagem(Image img, int x, int y, int w, int h) {
     return cortada;
 }
 
+Image imageRead(Image img){
+
+  char imagetype[4];
+  scanf("%s", imagetype);
+
+  // read width height and color of image
+  int max_color;
+  scanf("%u %u %d", &img.width, &img.height, &max_color);
+
+  // read all pixels of image
+  for (unsigned int i = 0; i < img.height; ++i) {
+      for (unsigned int j = 0; j < img.width; ++j) {
+          scanf("%hu %hu %hu", &img.pixel[i][j][0],
+                               &img.pixel[i][j][1],
+                               &img.pixel[i][j][2]);
+
+      }
+  }
+
+  return img;
+}
+
 void imagePrint(Image img){
   //Image print format
   printf("P3\n");
@@ -118,22 +140,7 @@ void imagePrint(Image img){
 int main() {
     Image img;
 
-    char imagetype[4];
-    scanf("%s", imagetype);
-
-    // read width height and color of image
-    int max_color;
-    scanf("%u %u %d", &img.width, &img.height, &max_color);
-
-    // read all pixels of image
-    for (unsigned int i = 0; i < img.height; ++i) {
-        for (unsigned int j = 0; j < img.width; ++j) {
-            scanf("%hu %hu %hu", &img.pixel[i][j][0],
-                                 &img.pixel[i][j][1],
-                                 &img.pixel[i][j][2]);
-
-        }
-    }
+    img = imageRead(img);
 
     int n_opcoes;
     scanf("%d", &n_opcoes);
