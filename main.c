@@ -5,8 +5,7 @@ typedef struct pixel {
 } Pixel;
 
 typedef struct image {
-    // [width][height][rgb] / 0 -> r / 1 -> g / 2 -> b
-    unsigned short int pixel[512][512][3];
+    unsigned short int pixel[512][512][3];   // [width][height][rgb] / 0 -> r / 1 -> g / 2 -> b
     unsigned int width, height;
 } Image;
 
@@ -185,12 +184,9 @@ int main() {
                 break;
             }
             case 4: { // Rotacao
-                int quantas_vezes = 0;
-                scanf("%d", &quantas_vezes);
-                quantas_vezes %= 4;
-                for (int j = 0; j < quantas_vezes; ++j) {
+
                     img = rotacionar90direita(img);
-                }
+
                 break;
             }
             case 5: { // Espelhamento
@@ -206,8 +202,10 @@ int main() {
                     for (int j = 0; j < w; ++j) {
                         int x = i2, y = j;
 
-                        if (horizontal == 1) y = img.width - 1 - j;
-                        else x = img.height - 1 - i2;
+                        if (horizontal == 1)
+                        y = img.width - 1 - j;
+                        else
+                        x = img.height - 1 - i2;
 
                         Pixel aux1;
                         aux1.r = img.pixel[i2][j][0];
