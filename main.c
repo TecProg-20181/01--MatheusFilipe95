@@ -193,51 +193,45 @@ void invert_colors(unsigned short int pixel[512][512][3],
 
   int main() {
     Image img;
+    int x, y, w, h, opcao, n_opcoes, tamanho = 0, horizontal = 0;
 
     img = imageRead(img);
 
-    int n_opcoes;
     scanf("%d", &n_opcoes);
 
     for(int i = 0; i < n_opcoes; ++i) {
-      int opcao;
       scanf("%d", &opcao);
 
       switch(opcao) {
-        case 1: { // Escala de Cinza
+        case 1: {
           img = grayscale(img);
           break;
         }
-        case 2: { // Filtro Sepia
+        case 2: {
           img = sepiascale(img);
           break;
         }
-        case 3: { // Blur
-          int tamanho = 0;
+        case 3: {
           scanf("%d", &tamanho);
           blur(img.height, img.pixel, tamanho, img.width);
           break;
         }
-        case 4: { // Rotacao
+        case 4: {
           img = rotate90right(img);
           break;
         }
-        case 5: { // Espelhamento
-          int horizontal = 0;
+        case 5: {
           scanf("%d", &horizontal);
           img = mirror_image(img, horizontal);
           break;
         }
-        case 6: { // Inversao de Cores
+        case 6: {
           invert_colors(img.pixel, img.width, img.height);
           break;
         }
-        case 7: { // Cortar Imagem
-          int x, y;
+        case 7: {
           scanf("%d %d", &x, &y);
-          int w, h;
           scanf("%d %d", &w, &h);
-
           img = imageCut(img, x, y, w, h);
           break;
         }
