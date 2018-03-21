@@ -52,7 +52,6 @@ void blur(unsigned int height, unsigned short int pixel[512][512][3], int size, 
 }
 
 Image rotate90right(Image img) {
-  int x, y;
   Image rotacionada;
 
   rotacionada.width = img.height;
@@ -190,6 +189,7 @@ void invert_colors(unsigned short int pixel[512][512][3],
       printf("\n");
     }
   }
+
 
   int main() {
     Image img;
