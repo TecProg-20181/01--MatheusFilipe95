@@ -9,7 +9,17 @@ typedef struct image {
   unsigned int width, height;
 } Image;
 
+int max(int a, int b){
+    if (a > b)
+      return a;
+    return b;
+}
 
+int min(int a, int b){
+    if (a > b)
+      return b;
+    return a;
+}
 
 Image grayscale(Image img) {
 
@@ -31,10 +41,10 @@ void blur(unsigned int height, unsigned short int pixel[512][512][3], int size, 
     for (unsigned int j = 0; j < width; ++j) {
       Pixel media = {0, 0, 0};
 
-      int menor_height = (height - 1 > i + size/2) ? i + size/2 : height - 1;
-      int min_width = (width - 1 > j + size/2) ? j + size/2 : width - 1;
-      for(int x = (0 > i - size/2 ? 0 : i - size/2); x <= menor_height; ++x) {
-        for(int y = (0 > j - size/2 ? 0 : j - size/2); y <= min_width; ++y) {
+      int menor_height = min(height - 1, i + size/2);
+      int min_width = min(width - 1, j + size/2);
+      for(int x = max(0, i - size/2); x <= menor_height; ++x) {
+        for(int y = max(0, j - size/2); y <= min_width; ++y) {
           media.red += pixel[x][y][0];
           media.green += pixel[x][y][1];
           media.blue += pixel[x][y][2];
@@ -88,15 +98,15 @@ void invert_colors(unsigned short int pixel[512][512][3],
         pixel[2] = img.pixel[x][j][2];
 
         int p =  pixel[0] * .393 + pixel[1] * .769 + pixel[2] * .189;
-        int menor_r = (255 >  p) ? p : 255;
+        int menor_r = min(255, p);
         img.pixel[x][j][0] = menor_r;
 
         p =  pixel[0] * .349 + pixel[1] * .686 + pixel[2] * .168;
-        menor_r = (255 >  p) ? p : 255;
+        menor_r = min(255, p);
         img.pixel[x][j][1] = menor_r;
 
         p =  pixel[0] * .272 + pixel[1] * .534 + pixel[2] * .131;
-        menor_r = (255 >  p) ? p : 255;
+        menor_r = min(255, p);
         img.pixel[x][j][2] = menor_r;
       }
     }
@@ -175,6 +185,7 @@ void invert_colors(unsigned short int pixel[512][512][3],
     return img;
   }
 
+
   void imagePrint(Image img){
     printf("P3\n");
     printf("%u %u\n255\n", img.width, img.height);
@@ -193,13 +204,14 @@ void invert_colors(unsigned short int pixel[512][512][3],
 
   int main() {
     Image img;
-    int x, y, w, h, opcao, n_opcoes, tamanho = 0, horizontal = 0;
 
     img = imageRead(img);
 
+    int n_opcoes;
     scanf("%d", &n_opcoes);
 
     for(int i = 0; i < n_opcoes; ++i) {
+      int opcao;
       scanf("%d", &opcao);
 
       switch(opcao) {
@@ -212,15 +224,22 @@ void invert_colors(unsigned short int pixel[512][512][3],
           break;
         }
         case 3: {
+          int tamanho = 0;
           scanf("%d", &tamanho);
           blur(img.height, img.pixel, tamanho, img.width);
           break;
         }
         case 4: {
-          img = rotate90right(img);
+          int quantas_vezes = 0;
+          scanf("%d", &quantas_vezes);
+          quantas_vezes %= 4;
+          for(int j = 0; j < quantas_vezes; ++j){
+              img = rotate90right(img);
+          }
           break;
         }
         case 5: {
+          int horizontal = 0;
           scanf("%d", &horizontal);
           img = mirror_image(img, horizontal);
           break;
@@ -230,6 +249,7 @@ void invert_colors(unsigned short int pixel[512][512][3],
           break;
         }
         case 7: {
+          int x, y, w, h;
           scanf("%d %d", &x, &y);
           scanf("%d %d", &w, &h);
           img = imageCut(img, x, y, w, h);
