@@ -10,15 +10,15 @@ typedef struct image {
 } Image;
 
 int max(int a, int b){
-    if (a > b)
-      return a;
-    return b;
+  if (a > b)
+  return a;
+  return b;
 }
 
 int min(int a, int b){
-    if (a > b)
-      return b;
-    return a;
+  if (a > b)
+  return b;
+  return a;
 }
 
 Image grayscale(Image img) {
@@ -36,7 +36,10 @@ Image grayscale(Image img) {
   return img;
 }
 
-void blur(unsigned int height, unsigned short int pixel[512][512][3], int size, unsigned int width) {
+void blur(unsigned int height, unsigned short int pixel[512][512][3], unsigned int width) {
+  int size = 0;
+  scanf("%d", &size);
+
   for (unsigned int i = 0; i < height; ++i) {
     for (unsigned int j = 0; j < width; ++j) {
       Pixel media = {0, 0, 0};
@@ -74,7 +77,6 @@ Image rotate90right(Image img) {
       rotacionada.pixel[i][j][2] = img.pixel[x][y][2];
     }
   }
-
   return rotacionada;
 }
 
@@ -113,8 +115,11 @@ void invert_colors(unsigned short int pixel[512][512][3],
     return img;
   }
 
-  Image mirror_image(Image img, int horizontal){
+  Image mirror_image(Image img){
     int w = img.width, h = img.height;
+
+    int horizontal = 0;
+    scanf("%d", &horizontal);
 
     if (horizontal == 1)
     w /= 2;
@@ -146,7 +151,11 @@ void invert_colors(unsigned short int pixel[512][512][3],
     return img;
   }
 
-  Image imageCut(Image img, int x, int y, int width, int height) {
+  Image imageCut(Image img) {
+    int x, y, width, height;
+    scanf("%d %d", &x, &y);
+    scanf("%d %d", &width, &height);
+
     Image cortada;
 
     cortada.width = width;
@@ -159,8 +168,17 @@ void invert_colors(unsigned short int pixel[512][512][3],
         cortada.pixel[i][j][2] = img.pixel[i + y][j + x][2];
       }
     }
-
     return cortada;
+  }
+
+  Image rotation90(Image img){
+    int quantas_vezes = 0;
+    scanf("%d", &quantas_vezes);
+    quantas_vezes %= 4;
+    for(int j = 0; j < quantas_vezes; ++j){
+      img = rotate90right(img);
+    }
+    return img;
   }
 
   Image imageRead(Image img){
@@ -178,13 +196,10 @@ void invert_colors(unsigned short int pixel[512][512][3],
         scanf("%hu %hu %hu", &img.pixel[i][j][0],
         &img.pixel[i][j][1],
         &img.pixel[i][j][2]);
-
       }
     }
-
     return img;
   }
-
 
   void imagePrint(Image img){
     printf("P3\n");
@@ -196,7 +211,6 @@ void invert_colors(unsigned short int pixel[512][512][3],
         img.pixel[i][j][1],
         img.pixel[i][j][2]);
       }
-
       printf("\n");
     }
   }
@@ -224,24 +238,15 @@ void invert_colors(unsigned short int pixel[512][512][3],
           break;
         }
         case 3: {
-          int tamanho = 0;
-          scanf("%d", &tamanho);
-          blur(img.height, img.pixel, tamanho, img.width);
+          blur(img.height, img.pixel, img.width);
           break;
         }
         case 4: {
-          int quantas_vezes = 0;
-          scanf("%d", &quantas_vezes);
-          quantas_vezes %= 4;
-          for(int j = 0; j < quantas_vezes; ++j){
-              img = rotate90right(img);
-          }
+          img = rotation90(img);
           break;
         }
         case 5: {
-          int horizontal = 0;
-          scanf("%d", &horizontal);
-          img = mirror_image(img, horizontal);
+          img = mirror_image(img);
           break;
         }
         case 6: {
@@ -249,14 +254,10 @@ void invert_colors(unsigned short int pixel[512][512][3],
           break;
         }
         case 7: {
-          int x, y, w, h;
-          scanf("%d %d", &x, &y);
-          scanf("%d %d", &w, &h);
-          img = imageCut(img, x, y, w, h);
+          img = imageCut(img);
           break;
         }
       }
-
     }
 
     imagePrint(img);
