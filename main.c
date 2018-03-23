@@ -11,14 +11,14 @@ typedef struct image {
 
 int max(int a, int b){
   if (a > b)
-  return a;
-  return b;
+    return a;
+return b;
 }
 
 int min(int a, int b){
   if (a > b)
-  return b;
-  return a;
+    return b;
+return a;
 }
 
 Image grayscale(Image img) {
@@ -36,32 +36,33 @@ Image grayscale(Image img) {
   return img;
 }
 
-void blur(unsigned int height, Pixel pixel[512][512], unsigned int width) {
+Image blur(Image img) {
   int size = 0;
   scanf("%d", &size);
 
-  for (unsigned int i = 0; i < height; ++i) {
-    for (unsigned int j = 0; j < width; ++j) {
+  for (unsigned int i = 0; i < img.height; ++i) {
+    for (unsigned int j = 0; j < img.width; ++j) {
       Pixel media = {0, 0, 0};
 
-      int menor_height = min(height - 1, i + size/2);
-      int min_width = min(width - 1, j + size/2);
+      int menor_height = min(img.height - 1, i + size/2);
+      int min_width = min(img.width - 1, j + size/2);
       for(int x = max(0, i - size/2); x <= menor_height; ++x) {
         for(int y = max(0, j - size/2); y <= min_width; ++y) {
-          media.red += pixel[x][y].red;
-          media.green += pixel[x][y].green;
-          media.blue += pixel[x][y].blue;
+          media.red += img.pixel[x][y].red;
+          media.green += img.pixel[x][y].green;
+          media.blue += img.pixel[x][y].blue;
         }
       }
       media.red /= size * size;
       media.green /= size * size;
       media.blue /= size * size;
 
-      pixel[i][j].red = media.red;
-      pixel[i][j].green = media.green;
-      pixel[i][j].blue = media.blue;
+      img.pixel[i][j].red = media.red;
+      img.pixel[i][j].green = media.green;
+      img.pixel[i][j].blue = media.blue;
     }
   }
+  return img;
 }
 
 Image rotate90right(Image img) {
@@ -80,15 +81,15 @@ Image rotate90right(Image img) {
   return rotacionada;
 }
 
-void invert_colors(Pixel pixel[512][512],
-  unsigned int width, unsigned int height) {
-    for (unsigned int i = 0; i < height; ++i) {
-      for (unsigned int j = 0; j < width; ++j) {
-        pixel[i][j].red = 255 - pixel[i][j].red;
-        pixel[i][j].green = 255 - pixel[i][j].green;
-        pixel[i][j].blue = 255 - pixel[i][j].blue;
+Image invert_colors(Image img) {
+    for (unsigned int i = 0; i < img.height; ++i) {
+      for (unsigned int j = 0; j < img.width; ++j) {
+        img.pixel[i][j].red = 255 - img.pixel[i][j].red;
+        img.pixel[i][j].green = 255 - img.pixel[i][j].green;
+        img.pixel[i][j].blue = 255 - img.pixel[i][j].blue;
       }
     }
+    return img;
   }
 
   Image sepiascale(Image img){
@@ -121,18 +122,20 @@ void invert_colors(Pixel pixel[512][512],
     int horizontal = 0;
     scanf("%d", &horizontal);
 
-    if (horizontal == 1)
-    w /= 2;
-    else
-    h /= 2;
+    if (horizontal == 1){
+      w /= 2;
+    }
+    else{
+      h /= 2;
+    }
     for (int i2 = 0; i2 < h; ++i2) {
       for (int j = 0; j < w; ++j) {
         int x = i2, y = j;
 
         if (horizontal == 1)
-        y = img.width - 1 - j;
+          y = img.width - 1 - j;
         else
-        x = img.height - 1 - i2;
+          x = img.height - 1 - i2;
 
         Pixel aux1;
         aux1.red = img.pixel[i2][j].red;
@@ -238,7 +241,7 @@ void invert_colors(Pixel pixel[512][512],
           break;
         }
         case 3: {
-          blur(img.height, img.pixel, img.width);
+          img = blur(img);
           break;
         }
         case 4: {
@@ -250,7 +253,7 @@ void invert_colors(Pixel pixel[512][512],
           break;
         }
         case 6: {
-          invert_colors(img.pixel, img.width, img.height);
+          img = invert_colors(img);
           break;
         }
         case 7: {
